@@ -1,0 +1,131 @@
+body {
+    background-color: black;
+    font-family: helvetica;
+    color: LightGray;
+}
+
+#container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+canvas {
+    height: 80vh;
+    width: 80vh;
+    margin: 10vh 0;
+}
+
+#UI input[type=radio] {
+    display: none;
+}
+
+#image-1-radio:checked~#image-1-label .underline,
+#image-2-radio:checked~#image-2-label .underline,
+#image-3-radio:checked~#image-3-label .underline {
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: .2s;
+}
+
+label:hover .underline,
+#other-buttons .button:hover .background-1 {
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: .2s;
+}
+
+#UI {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#images-buttons-div {
+    display: flex;
+    width: 35%;
+    justify-content: space-around;
+}
+
+#images-buttons-div label {
+    display: block;
+    font-size: 1.5em;
+    position: relative;
+    padding: .3em;
+    cursor: pointer;
+}
+
+.underline {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-bottom: solid lightGray 2px;
+    width: 0;
+    height: 100%;
+}
+
+
+.label-text {
+    z-index: 10;
+    position: relative;
+}
+
+#other-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 40%;
+    flex-wrap: wrap;
+}
+
+#other-buttons .button {
+    font-size: 1.5em;
+    position: relative;
+    padding: .3em;
+    cursor: pointer;
+    background-color: LightGray;
+    border: solid LightGray 5px;
+    color: black;
+    margin: 1em;
+}
+
+.background-1 {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    background-color: #e84500;
+    width: 0;
+    height: 100%;
+}
+
+.background-2 {
+    z-index: 10;
+    position: relative;
+
+}
+
+#input-file {
+    display: none;
+}
+
+#file-rejected {
+    display: block;
+    position: absolute;
+    bottom: -3em;
+    left: 0;
+    color: red;
+    font-size: 0.6em;
+    display: none;
+}
+
+footer {
+    padding: 1em;
+    font-size: .7em;
+}
+
+footer a {
+    color: white;
+}
