@@ -16,7 +16,8 @@ body {
 
 canvas {
     height: 80vh;
-    width: 80vh;
+    max-width: 99vw;
+    aspect-ratio: 1;
     margin: 10vh 0;
 }
 
@@ -133,3 +134,14 @@ footer {
 footer a {
     color: white;
 }
+
+@media (max-width: 800px) {
+    #UI {
+        display: block;
+    }
+
+    #UI > * {
+        width: 70%;
+        margin: 0 auto;
+    }
+  }
