@@ -18,7 +18,7 @@ let captureLink;
 const allowedTypes = ['image/png', 'image/jpeg'];
 
 let squares = [];
-let maxTime = 150;
+let maxTime = 230;
 let minSide;
 
 
