@@ -230,6 +230,8 @@ document.getElementById('images-buttons-div').addEventListener('change', () => {
   };
 
   iniciar();
+
+  window.location.href = '#'
 })
 
 
@@ -250,7 +252,10 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
     document.getElementById('file-rejected').style.display = 'none';
 
     img.src = URL.createObjectURL(ev.target.files[0]);
-    setTimeout(() => { iniciar(); });
+    setTimeout(() => { iniciar();}, 300);
   };
+
+  for(i = 0; i < 3; i ++)
+  document.getElementsByClassName('image-radio')[i].checked = false;
 });
 
