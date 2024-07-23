@@ -3,10 +3,11 @@ let time = 0;
 const canvas = document.getElementsByTagName('canvas')[0];
 const context = canvas.getContext('2d');
 let data;
-let img = new Image();
+let img
 let img1 = new Image();
 let img2 = new Image();
 let img3 = new Image();
+let img4 = new Image();
 let hiddenCanvas = document.createElement('canvas');
 let mouse = {
   x: -1,
@@ -251,6 +252,7 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
 
     document.getElementById('file-rejected').style.display = 'none';
 
+    img = img4
     img.src = URL.createObjectURL(ev.target.files[0]);
     setTimeout(() => { iniciar();}, 300);
 
