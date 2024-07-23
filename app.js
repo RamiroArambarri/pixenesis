@@ -253,6 +253,8 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
 
     img.src = URL.createObjectURL(ev.target.files[0]);
     setTimeout(() => { iniciar();}, 300);
+
+    window.location.href = '#'
   };
 
   for(i = 0; i < 3; i ++)
