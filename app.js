@@ -1,3 +1,4 @@
+let iniciado = false;
 let start = Date.now();
 let time = 0;
 const canvas = document.getElementsByTagName('canvas')[0];
@@ -87,36 +88,54 @@ class Square {
 };
 
 img.addEventListener('load', () => {
-  iniciar()
+  iniciado = false;
 });
 
 function iniciar() {
+  if(img.width == 0 && img.height == 0){
+    return 0
+  }
   hiddenCanvas.width = img.width;
   hiddenCanvas.height = img.height;
   hiddenCanvas.getContext('2d').drawImage(img, 0, 0);
   data = hiddenCanvas.getContext('2d').getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height).data;
+  
+  let dataCargada
+  for(i = 0; i < data.length; i ++){
+    if(data[i] != 0){
+      dataCargada = true;
+      break;
+    }
+  }
+  
+  if(!dataCargada) {
+    return 0;
+  }
 
   if (img.width < img.height) {
     minSide = img.width / 32;
   } else {
     minSide = img.height / 32;
   }
-
   squares.splice(0, squares.length);
 
-  setTimeout(() => {
+
     if (img.width < img.height) {
       squares[0] = new Square(0, Math.floor((img.height - img.width) / 2), img.width);
     } else {
       squares[0] = new Square(Math.floor((img.width - img.height) / 2), 0, img.height);
     }
-  }, 100);
 
+    iniciado = true;
 }
 
 let loop = setInterval(game, 10);
 
 function game() {
+  if(!iniciado){
+    iniciar();
+    return 0;
+  }
   time = Date.now() - start;
 
   for (i = 0; i < squares.length; i++) {
@@ -230,7 +249,7 @@ document.getElementById('images-buttons-div').addEventListener('change', () => {
     img = img3;
   };
 
-  iniciar();
+  iniciado = false;
 
   window.location.href = '#'
 })
@@ -254,7 +273,7 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
 
     img = img4
     img.src = URL.createObjectURL(ev.target.files[0]);
-    setTimeout(() => { iniciar();}, 300);
+   iniciado = false;
 
     window.location.href = '#'
   };
