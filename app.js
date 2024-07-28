@@ -104,6 +104,7 @@ function iniciar() {
   for(i = 0; i < data.length; i ++){
     if(data[i] != 0){
       dataCargada = true;
+      console.log('data cargaad: ', i, data[i])
       break;
     }
   }
