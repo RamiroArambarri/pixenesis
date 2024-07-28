@@ -109,6 +109,7 @@ function iniciar() {
   }
   
   if(!dataCargada) {
+    console.log('imagen no cargada');
     return 0;
   }
 
@@ -250,8 +251,6 @@ document.getElementById('images-buttons-div').addEventListener('change', () => {
   };
 
   iniciado = false;
-
-  window.location.href = '#'
 })
 
 
@@ -274,8 +273,6 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
     img = img4
     img.src = URL.createObjectURL(ev.target.files[0]);
    iniciado = false;
-
-    window.location.href = '#'
   };
 
   for(i = 0; i < 3; i ++)
