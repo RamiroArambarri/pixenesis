@@ -1,14 +1,12 @@
-let iniciado = false;
-let start = Date.now();
+let started = true;
+let imageLoaded = true;
+let startTime = Date.now();
 let time = 0;
+let lastImageUploaded = '';
 const canvas = document.getElementsByTagName('canvas')[0];
 const context = canvas.getContext('2d');
 let data;
-let img
-let img1 = new Image();
-let img2 = new Image();
-let img3 = new Image();
-let img4 = new Image();
+let img = new Image();
 let hiddenCanvas = document.createElement('canvas');
 let mouse = {
   x: -1,
@@ -22,12 +20,7 @@ let squares = [];
 let maxTime = 230;
 let minSide;
 
-
-img1.src = 'images/neko.png';
-img2.src = 'images/sirena.png';
-img3.src = 'images/trigo.png';
-
-img = img1;
+img.src = 'images/neko.png';
 
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
@@ -50,67 +43,82 @@ class Square {
     this.x = x;
     this.y = y;
     this.side = side;
-    this.state = "birth";
-    this.birthTime = time;
+    this.showing = true;
+    this.initialTime = time;
+    this.showed = false;
+    this.strokeColor;
+    this.fillColor;
   };
 
+  setColors() {
+    let aux = Math.floor(256 * Math.random());
+    this.strokeColor = 'rgb(' + aux.toString(10) + ',' + aux.toString(10) + ',' + aux.toString(10) + ')'
+  }
   update() {
-    if (this.state == 'birth') {
-      if (time - this.birthTime > maxTime) {
-        this.state = 'live';
+    if (this.showing) {
+      if (time - this.initialTime > maxTime) {
+        this.showing = false;
       }
     }
   };
 
   show() {
-    if (this.state == "birth") {
-      let colorString = 'rgba(';
+    if (this.showing) {
+      this.fillColor = 'rgb(';
       let aux = getImagePixel(this.x + this.side / 2, this.y + this.side / 2)[0];
-      colorString += aux.toString(10) + ',';
+      this.fillColor += aux.toString(10) + ',';
       aux = getImagePixel(this.x + this.side / 2, this.y + this.side / 2)[1];
-      colorString += aux.toString(10) + ',';
+      this.fillColor += aux.toString(10) + ',';
       aux = getImagePixel(this.x + this.side / 2, this.y + this.side / 2)[2];
-      colorString += aux.toString(10) + ',';
-      aux = (time - this.birthTime) * 1 / maxTime
-      colorString += aux.toString(10) + ')'
+      this.fillColor += aux.toString(10) + ',';
+      aux = (time - this.initialTime) * 1 / maxTime
+      this.fillColor += aux.toString(10) + ')'
 
-      context.fillStyle = colorString;
+
+
+      context.fillStyle = this.fillColor;
       context.fillRect(imageToCanvasCoord(this.x, this.y)[0], imageToCanvasCoord(this.x, this.y)[1], imageToCanvasScale(this.side), imageToCanvasScale(this.side));
 
       aux = Math.floor(256 * Math.random());
-      colorString = 'rgb(' + aux.toString(10) + ',' + aux.toString(10) + ',' + aux.toString(10) + ')'
+      let colorString = 'rgb(' + aux.toString(10) + ',' + aux.toString(10) + ',' + aux.toString(10) + ')'
 
       context.lineWidth = imageToCanvasScale(this.side) / 30;
       context.strokeStyle = colorString;
       context.strokeRect(imageToCanvasCoord(this.x, this.y)[0], imageToCanvasCoord(this.x, this.y)[1], imageToCanvasScale(this.side), imageToCanvasScale(this.side));
     }
+
   };
 };
 
 img.addEventListener('load', () => {
-  iniciado = false;
+  console.log('load')
+  started = false;
+  imageLoaded = true;
 });
 
-function iniciar() {
-  if(img.width == 0 && img.height == 0){
+function start() {
+  if (img.width == 0) {
     return 0
   }
+
   hiddenCanvas.width = img.width;
   hiddenCanvas.height = img.height;
   hiddenCanvas.getContext('2d').drawImage(img, 0, 0);
+
+
   data = hiddenCanvas.getContext('2d').getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height).data;
-  
+
+
+
   let dataCargada
-  for(i = 0; i < data.length; i ++){
-    if(data[i] != 0){
+  for (i = 0; i < data.length; i++) {
+    if (data[i] != 0) {
       dataCargada = true;
-      console.log('data cargaad: ', i, data[i])
       break;
     }
   }
-  
-  if(!dataCargada) {
-    console.log('imagen no cargada');
+
+  if (!dataCargada) {
     return 0;
   }
 
@@ -121,24 +129,28 @@ function iniciar() {
   }
   squares.splice(0, squares.length);
 
+  if (img.width < img.height) {
+    squares[0] = new Square(0, Math.floor((img.height - img.width) / 2), img.width);
+  } else {
+    squares[0] = new Square(Math.floor((img.width - img.height) / 2), 0, img.height);
+  }
+  squares[0].setColors();
 
-    if (img.width < img.height) {
-      squares[0] = new Square(0, Math.floor((img.height - img.width) / 2), img.width);
-    } else {
-      squares[0] = new Square(Math.floor((img.width - img.height) / 2), 0, img.height);
-    }
-
-    iniciado = true;
+  started = true;
 }
 
 let loop = setInterval(game, 10);
 
 function game() {
-  if(!iniciado){
-    iniciar();
+  if (!imageLoaded) {
+    start();
     return 0;
   }
-  time = Date.now() - start;
+  if (!started) {
+    start();
+    return 0;
+  }
+  time = Date.now() - startTime;
 
   for (i = 0; i < squares.length; i++) {
     if (
@@ -148,7 +160,7 @@ function game() {
       mouse.y < squares[i].y + squares[i].side &&
       mouse.y > squares[i].y &&
       squares[i].side > minSide &&
-      squares[i].state == 'live'
+      !squares[i].showing
     ) {
       squares.push(
         new Square(squares[i].x, squares[i].y, Math.ceil(squares[i].side / 2))
@@ -174,6 +186,10 @@ function game() {
           Math.ceil(squares[i].side / 2)
         )
       );
+      squares[squares.length - 1].setColors();
+      squares[squares.length - 2].setColors();
+      squares[squares.length - 3].setColors();
+      squares[squares.length - 4].setColors();
       squares.splice(i, 1)
       i--;
       break;
@@ -181,9 +197,8 @@ function game() {
   };
 
   for (i = 0; i < squares.length; i++) {
-    squares[i].update()
     squares[i].show()
-
+    squares[i].update()
   };
 };
 
@@ -242,16 +257,16 @@ document.getElementById('images-buttons-div').addEventListener('change', () => {
   let radioValue = document.querySelector('input[type=radio]:checked').value;
 
   if (radioValue == 'image-1') {
-    img = img1;
+    img.src = 'images/neko.png';
+
   };
   if (radioValue == 'image-2') {
-    img = img2;
+    img.src = 'images/sirena.png';
+
   };
   if (radioValue == 'image-3') {
-    img = img3;
+    img.src = 'images/trigo.png';
   };
-
-  iniciado = false;
 })
 
 
@@ -262,7 +277,16 @@ document.getElementById('save-btn').addEventListener('click', () => {
   captureLink.click();
 })
 
+
+document.getElementById('input-file').addEventListener('click', () => {
+  if (img.src != lastImageUploaded) {
+    img.src = lastImageUploaded;
+    imageLoaded = false;
+  }
+});
+
 document.getElementById('input-file').addEventListener('input', (ev) => {
+  console.log('archivo cargado')
   if (ev.target.files[0]) {
     if (!allowedTypes.includes(ev.target.files[0].type)) {
       document.getElementById('file-rejected').style.display = 'block';
@@ -270,13 +294,13 @@ document.getElementById('input-file').addEventListener('input', (ev) => {
     };
 
     document.getElementById('file-rejected').style.display = 'none';
+    lastImageUploaded = URL.createObjectURL(ev.target.files[0]);
+    img.src = lastImageUploaded;
 
-    img = img4
-    img.src = URL.createObjectURL(ev.target.files[0]);
-   iniciado = false;
+    for (i = 0; i < 3; i++)
+      document.getElementsByClassName('image-radio')[i].checked = false;
+
+    imageLoaded = false;
   };
-
-  for(i = 0; i < 3; i ++)
-  document.getElementsByClassName('image-radio')[i].checked = false;
 });
 
