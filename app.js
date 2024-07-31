@@ -91,7 +91,6 @@ class Square {
 };
 
 img.addEventListener('load', () => {
-  console.log('load')
   started = false;
   imageLoaded = true;
 });
@@ -104,23 +103,7 @@ function start() {
   hiddenCanvas.width = img.width;
   hiddenCanvas.height = img.height;
   hiddenCanvas.getContext('2d').drawImage(img, 0, 0);
-
-
   data = hiddenCanvas.getContext('2d').getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height).data;
-
-
-
-  let dataCargada
-  for (i = 0; i < data.length; i++) {
-    if (data[i] != 0) {
-      dataCargada = true;
-      break;
-    }
-  }
-
-  if (!dataCargada) {
-    return 0;
-  }
 
   if (img.width < img.height) {
     minSide = img.width / 32;
@@ -286,7 +269,6 @@ document.getElementById('input-file').addEventListener('click', () => {
 });
 
 document.getElementById('input-file').addEventListener('input', (ev) => {
-  console.log('archivo cargado')
   if (ev.target.files[0]) {
     if (!allowedTypes.includes(ev.target.files[0].type)) {
       document.getElementById('file-rejected').style.display = 'block';
