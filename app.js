@@ -9,8 +9,8 @@ let data;
 let img = new Image();
 let hiddenCanvas = document.createElement('canvas');
 let mouse = {
-  x: -1,
-  y: -1
+  x: -1.0,
+  y: -1.0
 };
 let mouseInCanvas = false;
 let captureLink;
@@ -146,27 +146,27 @@ function game() {
       !squares[i].showing
     ) {
       squares.push(
-        new Square(squares[i].x, squares[i].y, Math.ceil(squares[i].side / 2))
+        new Square(squares[i].x, squares[i].y, squares[i].side / 2)
       );
       squares.push(
         new Square(
-          squares[i].x + Math.floor(squares[i].side / 2),
+          squares[i].x + squares[i].side / 2,
           squares[i].y,
-          Math.ceil(squares[i].side / 2)
+          squares[i].side / 2
         )
       );
       squares.push(
         new Square(
           squares[i].x,
-          squares[i].y + Math.floor(squares[i].side / 2),
-          Math.ceil(squares[i].side / 2)
+          squares[i].y + squares[i].side / 2,
+          squares[i].side / 2
         )
       );
       squares.push(
         new Square(
-          squares[i].x + Math.floor(squares[i].side / 2),
-          squares[i].y + Math.floor(squares[i].side / 2),
-          Math.ceil(squares[i].side / 2)
+          squares[i].x + squares[i].side / 2,
+          squares[i].y + squares[i].side / 2,
+          squares[i].side / 2
         )
       );
       squares[squares.length - 1].setColors();
