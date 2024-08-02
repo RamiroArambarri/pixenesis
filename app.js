@@ -106,9 +106,9 @@ function start() {
   data = hiddenCanvas.getContext('2d').getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height).data;
 
   if (img.width < img.height) {
-    minSide = img.width / 32;
+    minSide = img.width / 64;
   } else {
-    minSide = img.height / 32;
+    minSide = img.height / 64;
   }
   squares.splice(0, squares.length);
 
